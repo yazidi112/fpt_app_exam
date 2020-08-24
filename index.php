@@ -15,7 +15,7 @@
     <div class="container">
 		<h1>Examen 2019/2020</h1>
 		<hr/>
-		<a href="admin" class="btn btn-info" target="_blank">Administration</a>
+		<a href="admin/login.php" class="btn btn-info" target="_blank">Administration</a>
 		<a href="etudiant" class="btn btn-info" target="_blank">Etudiants</a>
 		<a href="personnel" class="btn btn-info" target="_blank">Personnel</a>
     <a href="chefdepartement" class="btn btn-info" target="_blank">chef département</a>

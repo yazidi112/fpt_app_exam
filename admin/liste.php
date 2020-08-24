@@ -116,6 +116,7 @@ $mysqli -> set_charset("utf8");
             </tr>
             </table>
             <?php
+                $respo_modules=[];
                 if(isset($_GET['date'])){
                     $sql = "
                     SELECT * 
@@ -124,20 +125,41 @@ $mysqli -> set_charset("utf8");
                     AND date='".$_GET['date']."' 
                     and horaire='".$_GET['horaire']."' 
                     and salle='".$_GET['salle']."'
-
                 ";
                 //echo $sql;
                     if ($result = $mysqli -> query($sql)) {
-                    
                         $row = $result->fetch_array(MYSQLI_ASSOC);
+                        if($row){
+                            $sql11 = "
+                            SELECT * 
+                            FROM intervenant i, personnel p
+                            where i.ref_perso =p.ref_perso
+                            and ref_filiere='".$row['ref_filiere']."' 
+                            and ref_module='".$row['ref_module']."'
+                            ";
+                            if ($result11 = $mysqli -> query($sql11)) {
+                                while($row11 = $result11->fetch_array(MYSQLI_ASSOC)){
+                                    $respo_modules[] = $row11;
+                                }
+                            }
+                        }
                     }
                 }
             ?>
             <div style="margin-top:20px" class="row">
                 <div class="col-md-4">Salle: <strong><?php echo $row['salle'] ?></strong> </div>
-                <div class="col-md-4">Resp du module: <strong><?php echo $row['ref_module'] ?></strong></div>
-                <div class="col-md-4">Nombre étudiants: <strong id="count">0</strong></div>
-                <div class="col-md-6">Resp de la salle: <strong> </strong></div>
+                <div class="col-md-4">Responsables du module: <strong>
+                <?php
+                    
+                    foreach($respo_modules as $p){
+                        echo $p['nomfr'];
+                        echo ", ";
+                    }
+                    
+                ?>
+                </strong></div>
+                <div class="col-md-4">Nombre d'étudiants: <strong id="count">0</strong></div>
+                <div class="col-md-6">Responsable de la salle: <strong> </strong></div>
                 <div class="col-md-6">Surveillants: <strong>   </strong></div>
             </div>
             <table class="table table-bordered ">
@@ -156,7 +178,7 @@ $mysqli -> set_charset("utf8");
                             where ref_filiere = '".$row['ref_filiere']."'
                             AND $m = '".$row['salle']."'
                         ";
-                        echo "<code>".$sql2."</code>";
+                        //echo "<code>".$sql2."</code>";
                         if ($result2 = $mysqli -> query($sql2)) {
                             $count = $result2->num_rows;
                             while($row2 = $result2->fetch_array(MYSQLI_ASSOC)){
